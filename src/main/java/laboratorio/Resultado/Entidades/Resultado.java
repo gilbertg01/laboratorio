@@ -1,5 +1,6 @@
 package laboratorio.Resultado.Entidades;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import laboratorio.Facturacion.Entidades.Factura;
 import laboratorio.Paciente.Entidades.Paciente;
 import laboratorio.Pruebas.Entidades.Prueba;
@@ -20,6 +21,7 @@ public class Resultado {
 
     @ManyToOne
     @JoinColumn(name = "prueba_id", nullable = false)
+    @JsonIgnore
     private Prueba prueba;
 
 
@@ -27,6 +29,7 @@ public class Resultado {
     private String resultadoTexto;
 
     @ManyToOne
+    @JsonIgnore
     private Paciente paciente;
 
     @Column(name = "activo")
