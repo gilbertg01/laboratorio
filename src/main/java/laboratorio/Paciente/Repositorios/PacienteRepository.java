@@ -14,14 +14,14 @@ import java.util.Optional;
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
 
     @Query("SELECT p FROM Paciente p WHERE " +
-            "(:nombre IS NULL OR p.nombre LIKE %:nombre%) AND " +
-            "(:apellido IS NULL OR p.apellido LIKE %:apellido%) AND " +
+            "(:nombre IS NULL OR p.nombre LIKE CONCAT(CAST(:nombre AS text), '%')) AND " +
+            "(:apellido IS NULL OR p.apellido LIKE CONCAT(CAST(:apellido AS text), '%')) AND " +
             "(:tipoDocumento IS NULL OR p.tipoDocumento = :tipoDocumento) AND " +
             "(:documento IS NULL OR p.documento = :documento) AND " +
             "(:fechaNacimiento IS NULL OR p.fechaNacimiento = :fechaNacimiento) AND " +
-            "(:telefono IS NULL OR p.telefono LIKE %:telefono%) AND " +
-            "(:direccion IS NULL OR p.direccion LIKE %:direccion%) AND " +
-            "(:seguroSalud IS NULL OR p.seguroSalud LIKE %:seguroSalud%)")
+            "(:telefono IS NULL OR p.telefono LIKE CONCAT(CAST(:telefono AS text), '%')) AND " +
+            "(:direccion IS NULL OR p.direccion LIKE CONCAT(CAST(:direccion AS text), '%')) AND " +
+            "(:seguroSalud IS NULL OR p.seguroSalud LIKE CONCAT(CAST(:seguroSalud AS text), '%'))")
     List<Paciente> buscarPorCriterios(
             @Param("nombre") String nombre,
             @Param("apellido") String apellido,

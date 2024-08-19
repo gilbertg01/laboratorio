@@ -7,29 +7,22 @@
     <link rel="icon" type="image/png" href="./assets/img/favicon.png">
     <title>
         Lab System│Bioanalista
-    </title>    <!-- Fonts and icons -->
+    </title>
+    <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+    <!-- Nucleo Icons -->
     <link href="./assets/css/nucleo-icons.css" rel="stylesheet" />
     <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
-
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-
+    <link href="./assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="./assets/css/argon-dashboard.css?v=2.0.4" rel="stylesheet" />
-
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- jQuery (necesario para funciones de Bootstrap como modal) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Popper.js (necesario para Bootstrap para manejar poppers, como tooltips y popovers) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-
-    <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
     <style>
         .nav-link.active {
             background-color: #20c997 !important;
@@ -278,9 +271,11 @@
 </main>
 
 <!--   Core JS Files   -->
-<script src="../static/assets/js/plugins/perfect-scrollbar.min.js"></script>
-<script src="../static/assets/js/plugins/smooth-scrollbar.min.js"></script>
-<script src="../static/assets/js/plugins/chartjs.min.js"></script>
+<script src="/assets/js/core/popper.min.js"></script>
+<script src="/assets/js/core/bootstrap.min.js"></script>
+<script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script src="/assets/js/plugins/chartjs.min.js"></script>
 <script>
     $(document).ready(function () {
         let selectedFactura = null;
@@ -289,8 +284,12 @@
         // Función para cargar las facturas desde el servidor
         function cargarFacturas() {
             fetch('/api/facturas/noCompletadas')
-                .then(response => response.json())
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
                 .then(facturas => {
+                    console.log('Facturas recibidas:', facturas);
                     const facturasList = $('#facturas-list');
                     facturasList.empty();
                     facturas.forEach(factura => {
@@ -309,9 +308,12 @@
                     });
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Error al cargar facturas:', error);
                 });
         }
+
+        // Llamar a la función para cargar facturas al iniciar
+        cargarFacturas();
 
         window.selectFactura = function (row) {
             // Remover la selección previa
@@ -320,6 +322,7 @@
             $(row).addClass('selected-row');
             // Guardar el ID de la factura seleccionada
             selectedFactura = $(row).data('factura-id');
+            console.log('Factura seleccionada:', selectedFactura);
             // Mostrar botón de cargar pruebas
             $('#btnCargarPruebas').show();
         };
@@ -342,15 +345,12 @@
                         const pruebasFacturaList = $('#pruebas-factura-list');
                         pruebasFacturaList.empty();
                         pruebas.forEach(prueba => {
-                            if (!prueba.tieneResultado) {
-                                const row = `
-                            <tr data-prueba-id="${prueba.id}" ondblclick="deselectPrueba()" onclick="selectPrueba(this)">
-                                <td class="text-left text-xs font-weight-bold">${prueba.nombrePrueba}</td>
-                                <td class="text-center text-xs font-weight-bold">${prueba.costo.toFixed(2)}</td>
-                            </tr>
-                        `;
-                                pruebasFacturaList.append(row);
-                            }
+                            const row = `
+                    <tr data-prueba-id="${prueba.id}" ondblclick="deselectPrueba()" onclick="selectPrueba(this)">
+                        <td class="text-left text-xs font-weight-bold">${prueba.nombrePrueba}</td>
+                        <td class="text-center text-xs font-weight-bold">${prueba.costo.toFixed(2)}</td>
+                    </tr>`;
+                            pruebasFacturaList.append(row);
                         });
                     })
                     .catch(error => {
@@ -365,6 +365,7 @@
             $(row).addClass('selected-row');
             // Guardar el ID de la prueba seleccionada
             selectedPrueba = $(row).data('prueba-id');
+            console.log('Prueba seleccionada:', selectedPrueba);
             // Mostrar botón de registrar resultado
             $('#btnRegistrarResultado').show();
         };
@@ -458,22 +459,12 @@
             });
         }
 
-        cargarFacturas();
     });
 </script>
 
-<script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-        var options = {
-            damping: '0.5'
-        }
-        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-</script>
 <!-- Github buttons -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-<script src="../static/assets/js/argon-dashboard.min.js?v=2.0.4"></script>
+<script src="/assets/js/argon-dashboard.min.js?v=2.0.4"></script>
 </body>
 </html>

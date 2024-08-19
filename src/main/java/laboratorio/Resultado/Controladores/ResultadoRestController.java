@@ -56,7 +56,7 @@ public class ResultadoRestController {
             resultadoRepository.save(resultado);
 
             boolean todasPruebasConResultados = factura.getPruebas().stream()
-                    .allMatch(p -> resultadoRepository.existsByPrueba(p));
+                    .allMatch(p -> resultadoRepository.existsByPruebaAndFactura(p, factura));
             if (todasPruebasConResultados) {
                 factura.setCompletada(true);
                 facturaRepository.save(factura);
@@ -65,7 +65,7 @@ public class ResultadoRestController {
             emailService.enviarCorreoResultado(paciente, prueba, resultado);
 
             List<PruebaDTO> pruebasDTO = factura.getPruebas().stream()
-                    .map(p -> new PruebaDTO(p, resultadoRepository.existsByPrueba(p)))
+                    .map(p -> new PruebaDTO(p, resultadoRepository.existsByPruebaAndFactura(p, factura)))
                     .collect(Collectors.toList());
 
             List<FacturaDTO> facturasDTO = facturaRepository.findByCompletadaFalse().stream()

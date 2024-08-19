@@ -3,10 +3,8 @@ package laboratorio.Resultado.Entidades;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import laboratorio.Facturacion.Entidades.Factura;
 import laboratorio.Paciente.Entidades.Paciente;
-import laboratorio.Pruebas.Entidades.Prueba;
 import jakarta.persistence.*;
-
-import java.util.List;
+import laboratorio.Pruebas.Entidades.Prueba;
 
 @Entity
 @Table(name = "resultado")

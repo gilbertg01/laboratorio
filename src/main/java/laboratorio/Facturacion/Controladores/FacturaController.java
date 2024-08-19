@@ -3,10 +3,7 @@ package laboratorio.Facturacion.Controladores;
 import laboratorio.Doctores.Entidades.Doctores;
 import laboratorio.Doctores.Repositorios.DoctoresRepository;
 import laboratorio.Email.Servicio.EmailService;
-import laboratorio.Facturacion.Entidades.Factura;
-import laboratorio.Facturacion.Entidades.FacturaDTO;
-import laboratorio.Facturacion.Entidades.FacturaRequest;
-import laboratorio.Facturacion.Entidades.MetodoPago;
+import laboratorio.Facturacion.Entidades.*;
 import laboratorio.Facturacion.Repositorios.FacturaRepository;
 import laboratorio.Facturacion.Repositorios.MetodoPagoRepository;
 import laboratorio.Paciente.Entidades.Paciente;
@@ -70,7 +67,11 @@ public class FacturaController {
         factura.setPruebas(pruebas);
 
         double subtotal = pruebas.stream().mapToDouble(Prueba::getCosto).sum();
-        double descuento = paciente.getArs().getDescuento();
+        // Manejar el caso donde ARS puede ser null
+        double descuento = 0;
+        if (paciente.getArs() != null) {
+            descuento = paciente.getArs().getDescuento();
+        }
         double totalDescuento = subtotal * descuento;
         double total = subtotal - totalDescuento;
         factura.setTotal(total);
@@ -92,7 +93,6 @@ public class FacturaController {
         savedFactura.setNumeroFactura("X-00" + savedFactura.getId());
 
         paciente.getFacturas().add(savedFactura);
-        paciente.getPruebas().addAll(pruebas);
         pacienteRepository.save(paciente);
 
         emailService.enviarCorreoFactura(paciente, savedFactura, pruebas);
@@ -115,9 +115,11 @@ public class FacturaController {
         }
         Factura factura = facturaOpt.get();
         List<PruebaDTO> pruebasDTO = factura.getPruebas().stream()
-                .map(prueba -> new PruebaDTO(prueba, resultadoRepository.existsByPrueba(prueba)))
+                .filter(prueba -> !resultadoRepository.existsByPruebaAndFactura(prueba, factura))
+                .map(prueba -> new PruebaDTO(prueba, resultadoRepository.existsByPruebaAndFactura(prueba, factura)))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(pruebasDTO);
     }
+
 }
 

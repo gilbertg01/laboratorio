@@ -47,16 +47,12 @@ public class Prueba {
     @Column(name = "estado")
     private boolean estado;
 
-    @ManyToOne
-    @JoinColumn(name = "resultado_id")
-    private Resultado resultado;
-
     // Constructor
     public Prueba() {
         // Para JPA
     }
 
-    public Prueba(String nombrePrueba, String preparacionPaciente, String muestraRequerida, double costo, String categoriaPrueba, String notasAdicionales, boolean estado, Resultado resultado) {
+    public Prueba(String nombrePrueba, String preparacionPaciente, String muestraRequerida, double costo, String categoriaPrueba, String notasAdicionales, boolean estado) {
         this.idPrueba = UUID.randomUUID();
         this.nombrePrueba = nombrePrueba;
         this.preparacionPaciente = preparacionPaciente;
@@ -68,7 +64,6 @@ public class Prueba {
         this.fechaCreacion = new Date();
         this.fechaActualizacion = new Date();
         this.estado = estado;
-        this.resultado = resultado;
     }
 
     // Método para generar el código de la prueba
@@ -196,14 +191,6 @@ public class Prueba {
     public void setEstado(boolean estado) {
         this.estado = estado;
         actualizarFechaActualizacion();
-    }
-
-    public Resultado getResultado() {
-        return resultado;
-    }
-
-    public void setResultado(Resultado resultado) {
-        this.resultado = resultado;
     }
 
     // Método para actualizar la fecha de actualización

@@ -38,13 +38,6 @@ public class Paciente {
     @Column(name = "direccion")
     private String direccion;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "paciente_id")
-    private List<Prueba> pruebas;
-
-    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Resultado> resultados;
-
     @Column(name = "seguro_salud")
     private String seguroSalud;
 
@@ -158,22 +151,6 @@ public class Paciente {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
-    }
-
-    public List<Prueba> getPruebas() {
-        return pruebas;
-    }
-
-    public void setPruebas(List<Prueba> pruebas) {
-        this.pruebas = pruebas;
-    }
-
-    public List<Resultado> getResultados() {
-        return resultados;
-    }
-
-    public void setResultados(List<Resultado> resultados) {
-        this.resultados = resultados;
     }
 
     public String getSeguroSalud() {

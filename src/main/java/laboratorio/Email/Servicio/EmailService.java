@@ -58,8 +58,16 @@ public class EmailService {
         cuerpo = cuerpo.replace("{{fecha}}", factura.getFechaEmision().toString());
         cuerpo = cuerpo.replace("{{numeroFactura}}", factura.getNumeroFactura());
         cuerpo = cuerpo.replace("{{metodoPago}}", factura.getMetodoPago().getNombreMetodo());
-        cuerpo = cuerpo.replace("{{nombreSeguro}}", paciente.getArs().getNombreARS());
-        cuerpo = cuerpo.replace("{{descuento}}", String.format("%.2f", paciente.getArs().getDescuento() * 100));
+
+        // Comprobación de null para paciente.getArs()
+        String nombreARS = "No asegurado";
+        double descuento = 0;
+        if (paciente.getArs() != null) {
+            nombreARS = paciente.getArs().getNombreARS();
+            descuento = paciente.getArs().getDescuento();
+        }
+        cuerpo = cuerpo.replace("{{nombreSeguro}}", nombreARS);
+        cuerpo = cuerpo.replace("{{descuento}}", String.format("%.2f", descuento * 100));
 
         StringBuilder pruebasHTML = new StringBuilder();
         for (Prueba prueba : pruebas) {
